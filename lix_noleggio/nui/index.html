@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUI Example</title>
+    <style>
+        #menu {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.75);
+            width: 900px;
+            height: 600px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgb(255, 255, 255); 
+        }
+
+        #menuTitle {
+            color: #ffffff;
+            font-size: 50px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-shadow: 0px 0px 2px rgb(47, 0, 61);
+            margin: 0;
+            padding: 0;
+        }
+
+        #closeBtn {
+            margin-top: 125px;
+            padding: 10px 20px;
+            width: 150px;
+            height: 70px;
+            font-size: 27px;
+            text-align: center; 
+            line-height: 20px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-shadow: 0px 0px 2px rgb(20, 20, 20); 
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }   
+
+        #closeBtn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .square-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .square.bf400 {
+            width: 350px;
+            height: 250px;
+            background-color: #410488;
+            color: white;
+            font-size: 40px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-shadow: #444;
+            margin-top: 70px; 
+            position: relative;
+            left: 100px;
+            text-align: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+            background-image: url("https://cdn.discordapp.com/attachments/1167883291601408050/1269751265034899506/bf400-ezgif.com-webp-to-png-converter.png?ex=66b13384&is=66afe204&hm=4373665107a0dad9b72ebb74e7a54ba0bc1e7ffa23fdc7d9307b7d44bd38183f&");
+            background-repeat: no-repeat;
+            background-size: 70% 70%;
+            background-position: 50% 30%;
+        }
+
+        
+        .square.bf400 span {
+            display: block;
+            height: 35px;
+            line-height: 220px;
+        }
+
+        .square.issy {
+            width: 350px;
+            height: 250px;
+            background-color: #410488;
+            color: white;
+            font-size: 40px;
+            margin-top: 70px; 
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-shadow: #444;
+            position: relative;
+            right: 100px;
+            text-align: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+            background-image: url("https://cdn.discordapp.com/attachments/1167883291601408050/1269747486059139227/issi7.png?ex=66b12fff&is=66afde7f&hm=e14aba377f3c330fa78313fbc0caa454ea8580119a9d3a2d9a2438e15022d900&");
+            background-repeat: no-repeat;
+            background-size: 70% 70%;
+            background-position: 50% 30%;
+        }
+
+        .square.issy span {
+            display: block;
+            height: 35px;
+            line-height: 220px;
+        }
+
+        .square:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <h1 id="menuTitle">Benvenuto Noleggia il tuo veicolo!</h1>
+        <div class="square-container">
+            <div class="square issy" id="issyButton">
+                <span>ISSY SPORT</span>
+            </div>            
+            <div class="square bf400" id="bf400Button">
+                <span>BF 400</span>
+            </div>   
+        </div>
+        <button id="closeBtn">Chiudi</button>
+    </div>
+
+    <script>
+        window.addEventListener('message', function(event) {
+            const menu = document.getElementById('menu');
+            if (event.data.action === 'open' && menu) {
+                menu.style.display = 'block';
+            } else if (event.data.action === 'close' && menu) {
+                menu.style.display = 'none';
+            }
+        });
+
+        document.getElementById('issyButton').addEventListener('click', function() {
+            fetch(`https://${GetParentResourceName()}/selectVehicle`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ vehicle: 'issi7' })  
+            }).catch(error => {
+                console.error('Error selecting vehicle:', error);
+            });
+        });
+
+        document.getElementById('bf400Button').addEventListener('click', function() {
+            fetch(`https://${GetParentResourceName()}/selectVehicle2`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ vehicle: 'bf400' })  
+            }).catch(error => {
+                console.error('Error selecting vehicle:', error);
+            });
+        });
+
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            const menu = document.getElementById('menu');
+            if (menu) {
+                menu.style.display = 'none';
+            }
+
+            fetch(`https://${GetParentResourceName()}/closeMenu`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            }).catch(error => {
+                console.error('Errore nella chiusura del menu:', error);
+            });
+        });
+    </script>
+</body>
+</html>
